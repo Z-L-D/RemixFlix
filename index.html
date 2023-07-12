@@ -32,7 +32,7 @@
     </video>
     <div id="inputContainer">
         <input type="file" id="videoInput" accept="video/*">
-        <input type="file" id="subtitleInput" accept=".srt">
+        <input type="file" id="subtitleInput" accept=".vtt">
         <button id="resetButton">Reset</button>
     </div>
 
@@ -52,18 +52,16 @@
         subtitleInput.addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const track = document.createElement("track");
-                    track.kind = "subtitles";
-                    track.label = "English";
-                    track.srclang = "en";
-                    track.src = URL.createObjectURL(new Blob([e.target.result], {type: 'text/plain'}));
-                    track.default = true;
-                    videoPlayer.appendChild(track);
-                };
-                reader.readAsText(file);
+                const url = URL.createObjectURL(file);
+                const track = document.createElement('track');
+                track.kind = 'subtitles';
+                track.label = 'English';
+                track.srclang = 'en';
+                track.src = url;
+                track.default = true;
+                videoPlayer.appendChild(track);
             }
+            load_commands();
         });
 
         document.getElementById('resetButton').addEventListener('click', function() {
@@ -79,6 +77,43 @@
             // Remove the source of the video player
             videoPlayer.src = '';
         });
+
+        function load_commands(){
+            let video = document.querySelector('video');
+            let track = video.textTracks[0]; // Get the first text track        
+
+            track.addEventListener('cuechange', function() {
+                let cue = this.activeCues[0]; // Get the currently active cue
+                if (cue) {
+                    let cue_capture = cue.text.split("[");
+                    if(cue_capture.length > 1){
+                        // cue.text = cue_capture[0];
+                        let instruction_capture = cue_capture[1].split("]");
+                        let instruction = instruction_capture[0].split("@");
+                        let command = instruction[0];
+                        let data = instruction[1];
+
+                        console.log(command);
+                        console.log(data);
+
+                        if(command === "JUMP"){
+                            let time = vttTimeToSeconds(data);
+                            video.currentTime = time;
+                        }
+                    }
+                }
+            });
+        }
+
+        function vttTimeToSeconds(vttTime) {
+            let parts = vttTime.split(/[:.]/); // Split the time string at colons and the period
+            let hours = parseInt(parts[0], 10);
+            let minutes = parseInt(parts[1], 10);
+            let seconds = parseInt(parts[2], 10);
+            let milliseconds = parseInt(parts[3], 10);
+            return hours * 3600 + minutes * 60 + seconds + milliseconds / 1000;
+        }
+        
     </script>
 </body>
 </html>
