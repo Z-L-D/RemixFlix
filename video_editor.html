@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #video-container {
+            width: 800px;
+            height: 450px;
+            border: 1px solid black;
+            margin-bottom: 10px;
+        }
+
+        #timeline {
+            width: 800px;
+            height: 50px;
+            border: 1px solid black;
+            margin-bottom: 10px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div id="video-container"></div>
+    <div id="timeline"></div>
+    <button id="cut-button">Cut Video</button>
+    <button id="play-button">Play</button>
+    <script>
+        // Sample video URLs
+        const videoUrls = [
+            "https://example.com/video1.mp4",
+            "https://example.com/video2.mp4",
+            "https://example.com/video3.mp4"
+        ];
+
+        // Create video elements for each video URL
+        const videos = videoUrls.map(url => {
+            const video = document.createElement("video");
+            video.src = url;
+            video.controls = true;
+            video.style.display = "none";
+            return video;
+        });
+
+        // Append the first video to the video container
+        const videoContainer = document.getElementById("video-container");
+        videoContainer.appendChild(videos[0]);
+
+        // Create timeline elements for each video URL
+        videoUrls.forEach(url => {
+            const timelineItem = document.createElement("div");
+            timelineItem.style.width = "100px";
+            timelineItem.style.height = "100%";
+            timelineItem.style.backgroundColor = "lightblue";
+            timelineItem.style.display = "inline-block";
+            timelineItem.style.marginRight = "5px";
+            document.getElementById("timeline").appendChild(timelineItem);
+        });
+
+        // Initialize current video index and playhead position
+        let currentVideoIndex = 0;
+        let playheadPosition = 0;
+
+        // Function to update the video container with the current video
+        const updateVideoContainer = () => {
+            videoContainer.innerHTML = "";
+            videoContainer.appendChild(videos[currentVideoIndex]);
+        };
+
+        // Function to play the videos in the order defined by the timeline
+        const playVideos = () => {
+            if (currentVideoIndex < videos.length) {
+                videos[currentVideoIndex].currentTime = playheadPosition;
+                videos[currentVideoIndex].play();
+                videos[currentVideoIndex].addEventListener("ended", () => {
+                    currentVideoIndex++;
+                    playVideos();
+                });
+            }
+        };
+
+        // Cut the video at the current playhead position and move it to the next timeline item
+        const cutVideo = () => {
+            const currentVideo = videos[currentVideoIndex];
+            const newVideo = currentVideo.cloneNode();
+            newVideo.currentTime = currentVideo.currentTime;
+            videos.splice(currentVideoIndex + 1, 0, newVideo);
+
+            const newTimelineItem = document.createElement("div");
+            newTimelineItem.style.width = "100px";
+            newTimelineItem.style.height = "100%";
+            newTimelineItem.style.backgroundColor = "lightblue";
+            newTimelineItem.style.display = "inline-block";
+            newTimelineItem.style.marginRight = "5px";
+            document.getElementById("timeline").insertBefore(newTimelineItem, timelineItems[currentVideoIndex + 1]);
+
+            currentVideo.currentTime = 0;
+            updateVideoContainer();
+        };
+
+        // Event listeners for the buttons
+        const cutButton = document.getElementById("cut-button");
+        cutButton.addEventListener("click", cutVideo);
+
+        const playButton = document.getElementById("play-button");
+        playButton.addEventListener("click", playVideos);
+    </script>
+</body>
+</html>

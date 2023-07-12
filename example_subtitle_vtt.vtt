@@ -6,7 +6,7 @@ This is the first line of subtitles.
 
 2
 00:00:05.500 --> 00:00:07.500
-This is the second line of subtitles. <span>[JUMP@00:00:01.000]</span>
+This is the second line of subtitles. <c.hide>[FADE]</c>
 
 3
 00:00:09.000 --> 00:00:12.000
