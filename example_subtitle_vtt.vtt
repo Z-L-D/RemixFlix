@@ -5,9 +5,9 @@ WEBVTT
 This is the first line of subtitles.
 
 2
-00:00:05.500 --> 00:00:07.500
-This is the second line of subtitles. <c.hide>[FADE]</c>
+00:00:05.500 --> 00:00:07.500 
+This is the second line of subtitles. <span>hello</span>
 
 3
 00:00:09.000 --> 00:00:12.000
-And here is the third line of subtitles.
+This is the third line of subtitles.

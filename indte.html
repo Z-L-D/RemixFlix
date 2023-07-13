@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Adobe Premiere Clone</title>
+  <style>
+    .track {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      background-color: #f2f2f2;
+      margin-bottom: 10px;
+      overflow-x: scroll;
+    }
+
+    .element {
+      position: absolute;
+      height: 80px;
+      background-color: #ccc;
+      border: 1px solid #999;
+      cursor: move;
+    }
+  </style>
+</head>
+<body>
+  <h1>Adobe Premiere Clone</h1>
+
+  <input type="file" id="videoFileInput">
+  <div class="track" id="videoTrack"></div>
+
+  <input type="file" id="audioFileInput">
+  <div class="track" id="audioTrack"></div>
+
+  <script>
+    document.getElementById('videoFileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  const videoURL = URL.createObjectURL(file);
+  const videoElement = document.createElement('video');
+  videoElement.src = videoURL;
+  videoElement.controls = true;
+  videoElement.style.width = '100%';
+  document.getElementById('videoTrack').appendChild(videoElement);
+});
+
+document.getElementById('audioFileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  const audioURL = URL.createObjectURL(file);
+  const audioElement = document.createElement('audio');
+  audioElement.src = audioURL;
+  audioElement.controls = true;
+  audioElement.style.width = '100%';
+  document.getElementById('audioTrack').appendChild(audioElement);
+});
+
+let activeElement = null;
+
+document.addEventListener('mousedown', function(e) {
+  if (e.target.classList.contains('element')) {
+    activeElement = e.target;
+  }
+});
+
+document.addEventListener('mousemove', function(e) {
+  if (activeElement) {
+    const trackRect = activeElement.parentNode.getBoundingClientRect();
+    const newPosition = e.clientX - trackRect.left;
+    activeElement.style.left = newPosition + 'px';
+  }
+});
+
+document.addEventListener('mouseup', function() {
+  activeElement = null;
+});
+
+  </script>
+  
+</body>
+</html>

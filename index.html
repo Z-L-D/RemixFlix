@@ -13,7 +13,7 @@
             padding: 0;
         }
         #videoPlayer {
-            width: 80%;
+            width: 50%;
             height: auto;
         }
         #inputContainer {
@@ -26,9 +26,10 @@
             margin-left: 10px;
         }
 
-        ::cue(.hide){
-            color: green;
+        span{
+            visibility: hidden;
         }
+
     </style>
 </head>
 <body>
@@ -106,6 +107,8 @@
                         }
                     }
                 }
+
+                console.log(this.cues);
             });
         }
 
