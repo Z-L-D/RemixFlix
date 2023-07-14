@@ -6,8 +6,13 @@ This is the first line of subtitles.
 
 2
 00:00:05.500 --> 00:00:07.500 
-This is the second line of subtitles. <span>hello</span>
+This is the second line of subtitles. 
 
 3
 00:00:09.000 --> 00:00:12.000
 This is the third line of subtitles.
+
+4
+00:00:30.000 --> 00:00:40.000
+This is an example of a video track instruction.
+[VIDEO_0::GOTO]
