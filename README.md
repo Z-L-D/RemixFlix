@@ -27,8 +27,8 @@ Timelines
         * Description: Used to specify properties that better define the intended action
         * GOTO
             * TIME: {i}:{i}:{i}.{i}
-                Description: issues the specific time to move the transport to in the format - hours : minutes : seconds . milliseconds
-                Example: 00:10:08.001 - sends the transport to 10 minutes, 8 seconds, and 1 millisecond
+                * Description: issues the specific time to move the transport to in the format - hours : minutes : seconds . milliseconds
+                * Example: 00:10:08.001 - sends the transport to 10 minutes, 8 seconds, and 1 millisecond
         * EFFECT
             * OPACITY: Value range [0-100,0-100]
                 * Description: commands the layer to change its opacity to from the first value to the second value over the length of the clip
