@@ -19,17 +19,16 @@ Timelines
         * Example: 00:00:40.167 - the clip ends at 40 seconds and 167 milliseconds
     * Instruction: CLIP, GOTO, PAUSE, EFFECT
         * Description: Used to specify the type of action that will take place
-        * CLIP: a basic segment of video or audio.
-        * GOTO: send the timeline to a specific time specified in the properies
+        * CLIP: a basic segment of video or audio with not effects specified.
+        * PLAY: play the layer
         * PAUSE: pause the layer
         * EFFECT: perform the specified effect listed in the properies
     * Properties: Various depending on instruction.
         * Description: Used to specify properties that better define the intended action
-        * GOTO
-            * TIME: {i}:{i}:{i}.{i}
+        * EFFECT
+            * JUMP: {i}:{i}:{i}.{i}
                 * Description: issues the specific time to move the transport to in the format - hours : minutes : seconds . milliseconds
                 * Example: 00:10:08.001 - sends the transport to 10 minutes, 8 seconds, and 1 millisecond
-        * EFFECT
             * OPACITY: Value range [0-100,0-100]
                 * Description: commands the layer to change its opacity to from the first value to the second value over the length of the clip
                 * Example: [100,10] - fades from 100% opacity to 10% over the duration of the clip
