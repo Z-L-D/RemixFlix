@@ -18,6 +18,7 @@ Video Timelines
 * [VIDEO_0::EFFECT::WIPE_BT::100::0::00:00:00.000] - bottom to top
 * [VIDEO_0::EFFECT::WIPE_CC::100::0::00:00:00.000] - circular clockwise
 * [VIDEO_0::EFFECT::WIPE_CA::100::0::00:00:00.000] - circular anti-clockwise 
+* [VIDEO_0::EFFECT::SPEED::100::0::00:00:00.000] - change speed of video - external timer?
 
 Image Timelines
 
