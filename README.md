@@ -1,6 +1,21 @@
 # RemixReel
 A Video Player for Fans of FanEdits
 
+Description of intended interface.
+
+* two video elements centered horizontally on the page
+    * these elements sit on separate collapsible panes that can show both video elements or just a single video element
+        * collapsing one pane will automatically increase the size of the visible pane in a responsive manner
+    * the left video element is the monitor for looking previewing video footage in entirety, previewing clips, or settings clips
+        * below this element is a tool to set clips displayed as a small video timeline
+            * clips are added by clicking the 'set new clip' button which defaults to setting a clip 10 seconds in length
+            * each clip is randomly assigned a new color that hasn't yet been used - checks array
+        * below the clip tool is a box that shows a list of media content and clips
+            * this box will allow you to click on a media item or a clip and have it loaded into the video element above
+            * this box will also display the total length of each media element
+            * this box will also display the start time and end time for each clip in an editable box for easy and finite adjustment for clip lengths
+    * the right video element is the preview which will take json commands to modify the video as the fan editor intends
+
 --------------------
 
 VTT Extensions

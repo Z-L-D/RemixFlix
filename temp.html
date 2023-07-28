@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .draggable {
+        cursor: move;
+      }
+      .track {
+        fill: none;
+        stroke: black;
+        stroke-width: 1;
+      }
+    </style>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <svg id="editor" style="width: 100%; height: 600px;"></svg>
+    <button id="addTrackButton">Add Track</button>
+
+    <script>
+      var svg = d3.select("#editor");
+      var tracks = 8;
+      var trackHeight = 50;
+      var clipWidths = [50, 75, 100, 125, 150, 175, 200];
+      
+      // Draw tracks
+      for(let i = 0; i < tracks; i++) {
+        drawTrack(i);
+      }
+      
+      // Draw clips
+      clipWidths.forEach(function(width, index) {
+        drawClip(width, index);
+      });
+      
+      function drawTrack(i) {
+        svg.append("rect")
+          .attr("class", "track")
+          .attr("x", 0)
+          .attr("y", i * trackHeight)
+          .attr("width", "100%")
+          .attr("height", trackHeight);
+      }
+      
+      function drawClip(width, index) {
+        svg.append("rect")
+          .attr("class", "draggable")
+          .attr("x", 50)
+          .attr("y", index * trackHeight)
+          .attr("width", width)
+          .attr("height", 95)
+          .attr("fill", d3.schemeCategory10[index % 10])
+          .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended)
+            .subject(function(d) { return {x: d3.select(this).attr("x"), y: d3.select(this).attr("y")}; }));
+      }
+      
+      function dragstarted(event, d) {
+        d3.select(this).raise().attr("stroke", "black");
+      }
+
+      function dragged(event, d) {
+        d3.select(this).attr("x", event.x).attr("y", event.y);
+      }
+
+      function dragended(event, d) {
+        // Calculate the closest track and snap the clip to it
+        let closestTrack = Math.round(event.y / trackHeight);
+        d3.select(this).attr("y", closestTrack * trackHeight).attr("stroke", null);
+      }
+      
+      // Zoom in and out
+      window.addEventListener("wheel", function(event) {
+        event.preventDefault();
+        var zoomFactor = event.deltaY < 0 ? 1.1 : 0.9;
+        
+        var clips = document.getElementsByClassName("draggable");
+        for (var i = 0; i < clips.length; i++) {
+          var clip = d3.select(clips[i]);
+          var width = parseFloat(clip.attr("width")) * zoomFactor;
+          clip.attr("width", width);
+        }
+      }, {passive: false});
+
+      // Add track button
+      d3.select("#addTrackButton").on("click", function() {
+        drawTrack(tracks);
+        tracks++;
+      });
+    </script>
+  </body>
+</html>
