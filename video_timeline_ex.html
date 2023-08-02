@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Example</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+        button {
+            position: absolute;
+            top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <button id="addRectangle">Add Rectangle</button>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rectangles = [];
+        let dragging = false;
+        let resizing = false;
+        let currentRectangle = null;
+
+        canvas.width = window.innerWidth;
+        canvas.height = 50;
+
+        function randomColor() {
+            return `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            rectangles.forEach(rect => {
+                ctx.fillStyle = rect.color;
+                ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+            });
+        }
+
+        function addRectangle() {
+            rectangles.push({x: 10, y: 0, width: 75, height: 50, color: randomColor()});
+            draw();
+        }
+
+        document.getElementById('addRectangle').addEventListener('click', addRectangle);
+
+        canvas.addEventListener('mousedown', e => {
+            const x = e.clientX;
+            rectangles.forEach((rect, index) => {
+                if (x >= rect.x && x <= rect.x + rect.width && e.clientY <= rect.y + rect.height) {
+                    currentRectangle = index;
+                    if (x >= rect.x + rect.width - 5) {
+                        resizing = true;
+                    } else {
+                        dragging = true;
+                    }
+                }
+            });
+        });
+
+        canvas.addEventListener('mousemove', e => {
+            if (currentRectangle !== null) {
+                const rect = rectangles[currentRectangle];
+                if (dragging) {
+                    rect.x = e.clientX - rect.width / 2;
+                } else if (resizing) {
+                    rect.width = e.clientX - rect.x;
+                }
+                draw();
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            dragging = false;
+            resizing = false;
+            currentRectangle = null;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            dragging = false;
+            resizing = false;
+            currentRectangle = null;
+        });
+
+        canvas.addEventListener('mousemove', e => {
+            const x = e.clientX;
+            let overRightEdge = false;
+            rectangles.forEach((rect) => {
+                if (x >= rect.x && x <= rect.x + rect.width && e.clientY <= rect.y + rect.height) {
+                    if (x >= rect.x + rect.width - 5) {
+                        overRightEdge = true;
+                    }
+                }
+            });
+        
+            if (overRightEdge) {
+                canvas.style.cursor = 'e-resize';
+            } else {
+                canvas.style.cursor = 'default';
+            }
+        
+            if (currentRectangle !== null) {
+                const rect = rectangles[currentRectangle];
+                if (dragging) {
+                    rect.x = e.clientX - rect.width / 2;
+                } else if (resizing) {
+                    rect.width = e.clientX - rect.x;
+                }
+                draw();
+            }
+        });
+    </script>
+</body>
+</html>
+
+
