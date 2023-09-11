@@ -1,126 +1,71 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-        #videoPlayer {
-            width: 50%;
-            height: auto;
-        }
-        #inputContainer {
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        #resetButton {
-            margin-left: 10px;
-        }
-
-        span{
-            visibility: hidden;
-        }
-
+      #drop_zone {
+        border: 2px dashed #bbb;
+        width: 480px;
+        height: 360px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+      }
+      #video {
+        width: 480px;
+        height: 360px;
+        display: none;
+        margin: 0 auto;
+      }
     </style>
-</head>
-<body>
-    <video id="videoPlayer" controls>
-    </video>
-    <div id="inputContainer">
-        <input type="file" id="videoInput" accept="video/*">
-        <input type="file" id="subtitleInput" accept=".vtt">
-        <button id="resetButton">Reset</button>
-    </div>
+  </head>
+  <body>
+    <div id="drop_zone">Drop video here or click to upload</div>
+    <input type="file" id="file_input" accept="video/*" style="display: none;">
+    <video id="video" controls></video>
 
     <script>
-        const videoPlayer = document.getElementById('videoPlayer');
-        const videoInput = document.getElementById('videoInput');
-        const subtitleInput = document.getElementById('subtitleInput');
+      var dropZone = document.getElementById('drop_zone');
+      var fileInput = document.getElementById('file_input');
+      var video = document.getElementById('video');
 
-        videoInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                videoPlayer.src = url;
-            }
-        });
+      // Event handlers to manage the drop zone style
+      dropZone.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dropZone.style.background = "#eee";
+      });
 
-        subtitleInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                const track = document.createElement('track');
-                track.kind = 'subtitles';
-                track.label = 'English';
-                track.srclang = 'en';
-                track.src = url;
-                track.default = true;
-                videoPlayer.appendChild(track);
-            }
-            load_commands();
-        });
+      dropZone.addEventListener('dragleave', function (e) {
+        e.preventDefault();
+        dropZone.style.background = "none";
+      });
 
-        document.getElementById('resetButton').addEventListener('click', function() {
-            // Reset video and subtitle inputs
-            videoInput.value = '';
-            subtitleInput.value = '';
+      // Event handler for the drop event
+      dropZone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dropZone.style.display = "none";
+        video.style.display = "block";
 
-            // Remove all existing source and track elements from the video player
-            while (videoPlayer.firstChild) {
-                videoPlayer.removeChild(videoPlayer.firstChild);
-            }
+        var files = e.dataTransfer.files;
+        var fileURL = URL.createObjectURL(files[0]);
 
-            // Remove the source of the video player
-            videoPlayer.src = '';
-        });
+        video.src = fileURL;
+      });
 
-        function load_commands(){
-            let video = document.querySelector('video');
-            let track = video.textTracks[0]; // Get the first text track        
+      // Event handler for the click event
+      dropZone.addEventListener('click', function (e) {
+        fileInput.click();
+      });
 
-            track.addEventListener('cuechange', function() {
-                let cue = this.activeCues[0]; // Get the currently active cue
-                if (cue) {
-                    let cue_capture = cue.text.split("[");
-                    if(cue_capture.length > 1){
-                        // cue.text = cue_capture[0];
-                        let instruction_capture = cue_capture[1].split("]");
-                        let instruction = instruction_capture[0].split("@");
-                        let command = instruction[0];
-                        let data = instruction[1];
+      // Event handler for file input change event
+      fileInput.addEventListener('change', function (e) {
+        dropZone.style.display = "none";
+        video.style.display = "block";
 
-                        console.log(command);
-                        console.log(data);
+        var fileURL = URL.createObjectURL(this.files[0]);
 
-                        if(command === "JUMP"){
-                            let time = vttTimeToSeconds(data);
-                            video.currentTime = time;
-                        }
-                    }
-                }
-
-                console.log(this.cues);
-            });
-        }
-
-        function vttTimeToSeconds(vttTime) {
-            let parts = vttTime.split(/[:.]/); // Split the time string at colons and the period
-            let hours = parseInt(parts[0], 10);
-            let minutes = parseInt(parts[1], 10);
-            let seconds = parseInt(parts[2], 10);
-            let milliseconds = parseInt(parts[3], 10);
-            return hours * 3600 + minutes * 60 + seconds + milliseconds / 1000;
-        }
-        
+        video.src = fileURL;
+      });
     </script>
-</body>
+  </body>
 </html>
