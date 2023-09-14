@@ -41,3 +41,8 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
   
+
+  //https://github.com/zz85/timeliner
+  //https://github.com/vorg/timeline.js
+  //https://github.com/mrdoob/frame.js/
+  //https://github.com/idflood/TweenTime/
